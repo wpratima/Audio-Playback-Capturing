@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     private MediaProjectionManager mediaProjectionManager;
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private Button stopBtn;
     private int RECORD_AUDIO_PERMISSION_REQUEST_CODE = 42;
     private int MEDIA_PROJECTION_REQUEST_CODE = 13;
+    Timer audioTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,22 +51,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // 1
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED &&
-//                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-//                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//
-//            // 2
-//            ArrayList<String> wanted = new ArrayList<>();
-//            wanted.add(Manifest.permission.RECORD_AUDIO);
-//            wanted.add(Manifest.permission.RECORD_AUDIO);
-//            wanted.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-//            wanted.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-//
-//            //3
-//            ActivityCompat.requestPermissions(this, wanted.toArray(new String[wanted.size()]),0);
-//
-//        }
+        //intiAudioRecorder();
+
+    }
+
+    public void intiAudioRecorder(){
+        audioTimer = new Timer();
+        audioTimer.scheduleAtFixedRate(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        stopCapturing();
+                        startCapturing();
+                    }
+                }, 300000,
+                300000);
     }
 
     private void setButtonsEnabled(Boolean isCapturingAudio) {

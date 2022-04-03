@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioAttributes;
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.AudioPlaybackCaptureConfiguration;
 import android.media.AudioRecord;
 import android.media.projection.MediaProjection;
@@ -119,6 +120,8 @@ public final class AudioCaptureService extends Service {
                 .setBufferSizeInBytes(AudioCaptureService.BUFFER_SIZE_IN_BYTES)
                 .setAudioPlaybackCaptureConfig(config)
                 .build();
+        //AudioManager.isMusicActive();
+
 
         audioRecord.startRecording();
         audioCaptureThread = new Thread() {
@@ -141,7 +144,7 @@ public final class AudioCaptureService extends Service {
         }
 
         String timestamp = (new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss", Locale.US)).format(new Date());
-        String fileName = "Capture-" + timestamp + ".pcm";
+        String fileName = "Capture-" + timestamp + ".wav";
         return new File(audioCapturesDirectory.getAbsolutePath() + "/" + fileName);
     }
 

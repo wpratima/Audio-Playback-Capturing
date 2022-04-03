@@ -1,10 +1,12 @@
 package com.example.audiorecorder
+import android.Manifest
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioPlaybackCaptureConfiguration
@@ -15,6 +17,7 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import java.io.File
 import java.io.FileOutputStream
@@ -23,7 +26,7 @@ import java.util.*
 import kotlin.concurrent.thread
 import kotlin.experimental.and
 
-class AudioCapturingService : Service() {
+class `AudioCapturingService.backup` : Service() {
     private lateinit var mediaProjectionManager: MediaProjectionManager
     private var mediaProjection: MediaProjection? = null
 
@@ -95,6 +98,16 @@ class AudioCapturingService : Service() {
                 .setChannelMask(AudioFormat.CHANNEL_IN_MONO)
                 .build()
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
         audioRecord = AudioRecord.Builder()
                 .setAudioFormat(audioFormat)
                 // For optimal performance, the buffer size
